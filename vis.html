@@ -53,7 +53,11 @@
     </nav>
 </header>
 
-    <div id="grafo" style="width: 100%;height: 100%"></div>
+<div class="row" style="height: 100%;">
+    <div id="grafo" style="height: 100%; width: 33.33%;"></div>
+    <div id="grafo2" style="height: 100%; width: 33.33%;"></div>
+    <div id="grafo3" style="height: 100%; width: 33.33%;"></div>
+</div>
 
 <div>
 <a style="display: none;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
@@ -209,6 +213,8 @@
 
     //Se inicializa la librería que va a servir para ingresar datos
     var container = document.getElementById('grafo');
+    var container2 = document.getElementById('grafo2');
+    var container3 = document.getElementById('grafo3');
     // var data = { //ejemplo
     //     nodes: nodes,
     //     edges: edges
@@ -217,7 +223,17 @@
         nodes: new vis.DataSet(),
         edges: new vis.DataSet()
     };
+    var data2 = {
+        nodes2: new vis.DataSet(),
+        edges2: new vis.DataSet()
+    };
+    var data3 = {
+        nodes3: new vis.DataSet(),
+        edges3: new vis.DataSet()
+    };
     var network = new vis.Network(container, data, options);
+    var network2 = new vis.Network(container2, data2, options);
+    var network3 = new vis.Network(container3, data3, options);
 
 
     //Manejo del menu contextual que hicimos
