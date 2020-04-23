@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="css/all.min.css">
 
     <script src="js/vis-network.min.js"></script>
+    <script src="js/NodoGrafo.js"></script>
+    <script src="js/NodoArbol.js"></script>
+    <script src="js/MiDataSet.js"></script>
     <script src="js/jquery-3.5.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 
@@ -87,33 +90,6 @@
 
     var menuX;
     var menuY;
-
-    var colorComun = {
-        border: '#2B7CE9',
-        background: '#97C2FC',
-        highlight: {
-            border: '#2B7CE9',
-            background: '#D2E5FF'
-        }
-    };
-
-    var colorInicio = {
-        border: '#f5c6cb',
-        background: '#f8d7da',
-        highlight: {
-            border: '#dc3545',
-            background: '#dc3545'
-        }
-    };
-
-    var colorFin = {
-        border: '#c3e6cb',
-        background: '#d4edda',
-        highlight: {
-            border: '#28a745',
-            background: '#28a745'
-        }
-    };
 
     // ejemplo de nodos
     var nodes = new vis.DataSet([
@@ -220,7 +196,9 @@
     //     edges: edges
     // };
     var data = {
-        nodes: new vis.DataSet(),
+        nodes: new MiDataSet( function (e) {
+            return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
+        }),
         edges: new vis.DataSet()
     };
     var data2 = {
@@ -239,7 +217,7 @@
     //Manejo del menu contextual que hicimos
     network.on("oncontext", function (params) {
         params.event.preventDefault();
-        $('#context-menu a').hide();
+        $('#context-menu button').hide();
 
         //Depende de donde se clickeo se va a seleccionar lo que haya y mostrar
         //las opciones adecuadas en el menu
@@ -326,22 +304,14 @@
     function agregarNodo() {
         let label = getLetraDisponible();
 
-        let h = '??';
+        let h = null;
         if(!opciones.calcularH) {
             h = prompt('Ingrese H', 0);
             if(h == null) return;
             h = parseInt(h);
         }
 
-        let nodo = {
-            id: label,
-            label: label + ': ' + h,
-            x: menuX,
-            y: menuY,
-            inicio: false,
-            fin: false,
-            h: h
-        }
+        let nodo = new NodoGrafo(label, h, menuX, menuY, false, false);
         data.nodes.add(nodo);
 
         if(opciones.calcularH) recalcularH();
@@ -352,10 +322,7 @@
         let nodos = data.nodes.get();
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
-                e.inicio = false;
-                if(!e.fin) {
-                    e.color = colorComun;
-                }
+                e.setInicio(false);
             });
         }
 
@@ -363,8 +330,7 @@
 
         if(nodoSeleccionado.length > 0) {
             nodoSeleccionado = data.nodes.get(nodoSeleccionado[0]);
-            nodoSeleccionado.inicio = true;
-            nodoSeleccionado.color = colorInicio;
+            nodoSeleccionado.setInicio(true);
             data.nodes.update(nodoSeleccionado);
         }
     }
@@ -374,10 +340,7 @@
         let nodos = data.nodes.get();
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
-                e.fin = false;
-                if(!e.inicio) {
-                    e.color = colorComun;
-                }
+                e.setFin(false);
             });
         }
 
@@ -385,10 +348,8 @@
 
         if(nodoSeleccionado.length > 0) {
             nodoSeleccionado = data.nodes.get(nodoSeleccionado[0]);
-            nodoSeleccionado.fin = true;
-            nodoSeleccionado.h = 0;
-            nodoSeleccionado.label = nodoSeleccionado.id + ': 0';
-            nodoSeleccionado.color = colorFin;
+            nodoSeleccionado.setFin(true);
+            nodoSeleccionado.setH(0);
             data.nodes.update(nodoSeleccionado);
         }
 
@@ -401,7 +362,6 @@
 
     function getNodoInicial() {
         let nodo = null;
-
         data.nodes.forEach(function(e) {
             if(e.inicio) nodo = e;
         });
@@ -411,16 +371,11 @@
 
     function getNodoFinal() {
         let nodo = null;
-
         data.nodes.forEach(function(e) {
             if(e.fin) nodo = e;
         });
 
         return nodo;
-    }
-
-    function getHijos(nodo) {
-
     }
 
     function calcularRuta() {
@@ -459,7 +414,6 @@
     });
 
     function setCalcularH(valor) {
-        console.log(valor);
         opciones.calcularH = valor;
         if(valor) {
             recalcularH();
@@ -471,26 +425,26 @@
     function recalcularH() {
         let nodoFinal = getNodoFinal();
         let nodos = data.nodes.get();
-        if(nodoFinal != null) {
             nodos.forEach(function (e) {
-                if(e.id != nodoFinal.id) {
-                    h = Math.sqrt(Math.pow((nodoFinal.x - e.x),2)+Math.pow((nodoFinal.y-e.y),2))/10;
-                } else {
-                    h = 0;
-                }
-                e.h = parseInt(h);
-                e.label = e.id + ': ' + parseInt(h);
+                if(nodoFinal != null) {
+                    if (e.id != nodoFinal.id) {
+                        h = Math.sqrt(Math.pow((nodoFinal.x - e.x), 2) + Math.pow((nodoFinal.y - e.y), 2));
+                    } else {
+                        h = 0;
+                    }
+                    e.setH(parseInt(h));
+                } else e.setH(null);
+
+
             });
             data.nodes.update(nodos);
-        }
     }
 
     function borrarH() {
         let nodos = data.nodes.get();
         nodos.forEach(function(e) {
             if(!e.fin) {
-                e.h = null;
-                e.label = e.id + ': ??';
+                e.setH(null);
             }
         });
 
