@@ -5,8 +5,8 @@
  */
 class MiDataSet extends vis.DataSet {
 
-    constructor(callbackCreacion) {
-        super();
+    constructor(data,callbackCreacion) {
+        super(data);
         this.callbackCreacion = callbackCreacion;
     }
 

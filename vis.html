@@ -10,6 +10,8 @@
     <script src="js/vis-network.min.js"></script>
     <script src="js/NodoGrafo.js"></script>
     <script src="js/NodoArbol.js"></script>
+    <script src="js/AEstrella.js"></script>
+    <script src="js/grafos.js"></script>
     <script src="js/MiDataSet.js"></script>
     <script src="js/jquery-3.5.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -196,10 +198,10 @@
     //     edges: edges
     // };
     var data = {
-        nodes: new MiDataSet( function (e) {
+        nodes: new MiDataSet( grafoHOptimo.nodes, function (e) {
             return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
         }),
-        edges: new vis.DataSet()
+        edges: new vis.DataSet(grafoHOptimo.edges)
     };
     var data2 = {
         nodes2: new vis.DataSet(),
@@ -392,7 +394,8 @@
             return;
         }
 
-        alert('Todo ok, pero todavia no está implementado A*');
+        var aEstrella = new AEstrella(data.nodes.get());
+        aEstrella.resolver();
 
     }
 
@@ -459,6 +462,13 @@
         }
 
     });
+
+    function guardarComoJSON() {
+        console.log(JSON.stringify({
+            nodes: data.nodes.get(),
+            edges: data.edges.get()
+        }));
+    }
 </script>
 </body>
 </html>

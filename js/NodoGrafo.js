@@ -10,6 +10,7 @@ class NodoGrafo {
         this.y = y;
         this.setInicio(inicio);
         this.setFin(fin);
+        this.vecinos = null;
     }
 
     setH(h) {
@@ -21,15 +22,15 @@ class NodoGrafo {
         this.inicio = valor;
         if(valor) {
             if(this.fin) {
-                this.color = colorDoble;
+                this.color = colorAmarillo;
             } else {
-                this.color = colorInicio;
+                this.color = colorRojo;
             }
         } else {
             if(this.fin) {
-                this.color = colorFin;
+                this.color = colorVerde;
             } else {
-                this.color = colorComun;
+                this.color = colorAzul;
             }
         }
     }
@@ -40,22 +41,53 @@ class NodoGrafo {
         if(valor) {
             this.setH(0);
             if(this.inicio) {
-                this.color = colorDoble;
+                this.color = colorAmarillo;
             } else {
-                this.color = colorFin;
+                this.color = colorVerde;
             }
         } else {
             if(this.inicio) {
-                this.color = colorInicio;
+                this.color = colorRojo;
             } else {
-                this.color = colorComun;
+                this.color = colorAzul;
             }
 
         }
     }
+
+    /**
+     * Devuelve vecinos del nodo, si no los tengo calculados, calculo
+     * @returns [{costo:int,nodo:NodoGrafo}]
+     */
+
+    getVecinos() {
+        if(this.vecinos == null) {
+            //Si todavia no habia calculado mis vecinos, lo hago
+            let caminos = data.edges.get(network.getConnectedEdges(this.id));
+            this.vecinos = [];
+            if(caminos.length > 0) {
+                caminos.forEach(function(e) {
+                    //Cada camino tiene las propiedades from, to, peso, como no sabemos
+                    //la direccion del camino tenemos que ver si el siguiente esta en from o to
+                    if(e.from == this.id) {
+                        this.vecinos.push({
+                            costo: e.peso,
+                            nodo: data.nodes.get(e.to)
+                        });
+                    } else {
+                        this.vecinos.push({
+                            costo: e.peso,
+                            nodo: data.nodes.get(e.from)
+                        });
+                    }
+                }, this);
+            }
+        }
+        return this.vecinos;
+    }
 }
 
-var colorComun = {
+var colorAzul = {
     border: '#2B7CE9',
     background: '#97C2FC',
     highlight: {
@@ -64,7 +96,7 @@ var colorComun = {
     }
 };
 
-var colorInicio = {
+var colorRojo = {
     border: '#f5c6cb',
     background: '#f8d7da',
     highlight: {
@@ -73,7 +105,7 @@ var colorInicio = {
     }
 };
 
-var colorFin = {
+var colorVerde = {
     border: '#c3e6cb',
     background: '#d4edda',
     highlight: {
@@ -82,7 +114,7 @@ var colorFin = {
     }
 };
 
-var colorDoble = {
+var colorAmarillo = {
     border: '#ffeeba',
     background: '#ffeeba',
     highlight: {
