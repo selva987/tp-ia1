@@ -15,7 +15,7 @@ class AEstrella {
         //creo el nodo inicial del arbol
         this.inicioArbol = new NodoArbol(this.inicio, 0, null);
         this.lineaLog(t, 'Agrego el nodo inicial');
-        this.lineaLog(t, this.inicioArbol.getStrF);
+        this.lineaLog(t, this.inicioArbol.getStrF());
         let abiertos = [this.inicioArbol];
         let solucion = null;
         let minimo;
@@ -41,10 +41,10 @@ class AEstrella {
 
             //Si el nodo seleccionado es minimo y es la solucion, terminé, sino sigo
             if(minimo.nodo.fin && minimo == solucion) {
-                this.lineaLog(t, 'El nodo ' + minimo.nodo.id + 'con f\' = ' + minimo.f + ' es el nodo final y el mejor de los abiertos, por lo tanto es la solucion');
+                this.lineaLog(t, 'El nodo ' + minimo.nodo.id + ' con f\' = ' + minimo.f + ' es el nodo final y el mejor de los abiertos, por lo tanto es la solucion');
                 break;
             } else {
-                this.lineaLog(t, 'El nodo ' + minimo.nodo.id + 'con f\' = ' + minimo.f + ' es el minimo, así que lo expando');
+                this.lineaLog(t, 'El nodo ' + minimo.nodo.id + ' con f\' = ' + minimo.f + ' es el minimo, así que lo expando');
                 //el nodo que esta en minimo es el que voy a expandir, asi que lo quito de mis abiertos
                 abiertos.splice(abiertos.indexOf(minimo),1);
 
@@ -93,11 +93,33 @@ class AEstrella {
         console.log(this.inicioArbol);
         console.log(this.solucion);
         console.log(this.log);
+        this.solucion.marcarSolucion();
+
+        dataArbol = {
+            nodes: this.inicioArbol.getNodosArbol(),
+            edges: this.inicioArbol.getCaminosArbol()
+        };
+
+        var networkArbol = new vis.Network(containerArbol, dataArbol, optionsArbol);
+        console.log(this.parseLog());
+        $('#explicacion').html(this.parseLog());
     }
     lineaLog(t, txt) {
         if(!Array.isArray(this.log[t])) {
             this.log[t] = [];
         }
         this.log[t].push(txt);
+    }
+
+    parseLog() {
+        let str = '';
+        this.log.forEach(function (e,i) {
+            str+= "<h5>t = " + i + "</h5>\n";
+            e.forEach(function (e) {
+                str+= "<p>" + e + "</p>\n";
+            });
+        });
+
+        return str;
     }
 }

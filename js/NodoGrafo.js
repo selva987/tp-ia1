@@ -63,7 +63,7 @@ class NodoGrafo {
     getVecinos() {
         if(this.vecinos == null) {
             //Si todavia no habia calculado mis vecinos, lo hago
-            let caminos = data.edges.get(network.getConnectedEdges(this.id));
+            let caminos = dataGrafo.edges.get(networkGrafo.getConnectedEdges(this.id));
             this.vecinos = [];
             if(caminos.length > 0) {
                 caminos.forEach(function(e) {
@@ -72,12 +72,12 @@ class NodoGrafo {
                     if(e.from == this.id) {
                         this.vecinos.push({
                             costo: e.peso,
-                            nodo: data.nodes.get(e.to)
+                            nodo: dataGrafo.nodes.get(e.to)
                         });
                     } else {
                         this.vecinos.push({
                             costo: e.peso,
-                            nodo: data.nodes.get(e.from)
+                            nodo: dataGrafo.nodes.get(e.from)
                         });
                     }
                 }, this);

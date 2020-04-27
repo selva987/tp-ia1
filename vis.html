@@ -8,11 +8,6 @@
     <link rel="stylesheet" href="css/all.min.css">
 
     <script src="js/vis-network.min.js"></script>
-    <script src="js/NodoGrafo.js"></script>
-    <script src="js/NodoArbol.js"></script>
-    <script src="js/AEstrella.js"></script>
-    <script src="js/grafos.js"></script>
-    <script src="js/MiDataSet.js"></script>
     <script src="js/jquery-3.5.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
 
@@ -59,20 +54,26 @@
 </header>
 
 <div class="row" style="height: 100%;">
-    <div id="grafo" style="height: 100%; width: 33.33%;"></div>
-    <div id="grafo2" style="height: 100%; width: 33.33%;"></div>
-    <div id="grafo3" style="height: 100%; width: 33.33%;"></div>
+    <div class="card" style="height: 98%; width: 33%;">
+        <div id="grafo" class="card-body"></div>
+    </div>
+    <div class="card" style="height: 98%; width: 33%;">
+        <div id="arbol" class="card-body"></div>
+    </div>
+    <div class="card" style="height: 98%; width: 33%;">
+        <div id="explicacion" class="card-body" style="overflow-y: auto"></div>
+    </div>
 </div>
 
 <div>
 <a style="display: none;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
 <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
     <button id="agregar-nodo" class="btn btn-link dropdown-item" onclick="agregarNodo();">Agregar nodo</button>
-    <button id="eliminar-nodo" class="btn btn-link dropdown-item" onclick="network.deleteSelected()">Eliminar nodo</button>
+    <button id="eliminar-nodo" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar nodo</button>
     <button id="marcar-inicio" class="btn btn-link dropdown-item" onclick="marcarInicio()">Marcar como inicio</button>
     <button id="marcar-fin" class="btn btn-link dropdown-item" onclick="marcarFin()">Marcar como fin</button>
-    <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');network.addEdgeMode()">Agregar camino</button>
-    <button id="eliminar-camino" class="btn btn-link dropdown-item" onclick="network.deleteSelected()">Eliminar camino</button>
+    <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');networkGrafo.addEdgeMode()">Agregar camino</button>
+    <button id="eliminar-camino" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar camino</button>
 </div>
 </div>
 
@@ -86,201 +87,20 @@
     //Cuando se presiona suprimir, se elimina lo que haya seleccionado
     $(document).keyup(function(ev) {
         if(ev.keyCode == 46) {
-            network.deleteSelected();
+            networkGrafo.deleteSelected();
         }
     });
 
     var menuX;
     var menuY;
 
-    // ejemplo de nodos
-    var nodes = new vis.DataSet([
-        {id: 1, label: 'A'},
-        {id: 2, label: 'B'},
-        {id: 3, label: 'C'},
-        {id: 4, label: 'D'},
-        {id: 5, label: 'E'}
-    ]);
-
-    // ejemplo de caminos
-    var edges = new vis.DataSet([
-        {from: 1, to: 3, label: "30", color:"#5b5bff"},
-        {from: 1, to: 2,label: "15", color: "#5b5bff"},
-        {from: 2, to: 4,label: "100", color: "#5b5bff"},
-        {from: 2, to: 5,label: "50", color: "#5b5bff"},
-    ]);
-
-    //Configuracion de la libreria
-    var options = {
-        autoResize: true,
-        height: '100%',
-        width: '100%',
-        locale: 'es',
-        // locales: locales,
-        clickToUse: false,
-        // configure: {enabled:true},    // defined in the configure module.
-        edges: {
-            color: {
-                inherit: false,
-                color:'#848484',
-                highlight:'#848484',
-            }
-        },        // defined in the edges module.
-        // nodes: {...},        // defined in the nodes module.
-        // groups: {...},       // defined in the groups module.
-        // layout: {...},       // defined in the layout module.
-        // interaction: {...},  // defined in the interaction module.
-        manipulation: {
-            enabled: false,
-            initiallyActive: false,
-            addNode: function (node, callback) {
-                //codigo legacy a menos que quisieramos utilizar botones
-                setLabel('');
-                let label = getLetraDisponible();
-                if(label == null) return false;
-                node.label = label;
-                callback(node);
-            },
-            addEdge: function (edge, callback) {
-                setLabel('');
-                let peso = null;
-                let arrNombre = [edge.from, edge.to];
-
-                while(peso == null) {
-                    peso = prompt('Ingrese el peso de la ruta, solo se admiten números enteros', 0);
-                    if(!peso || peso == '0') {
-                        network.disableEditMode();
-                        return false;
-                    }
-
-                    peso = parseInt(peso);
-
-                    if(!Number.isInteger(peso)) {
-                        peso = null;
-                    }
-                }
-
-                edge.label = peso.toString();
-                edge.peso = peso;
-                edge.id = arrNombre.sort().join('');
-
-                if(data.edges.get(edge.id)) {
-                    alert('Los nodos ya están conectados');
-                    network.disableEditMode();
-                    return false;
-                }
-
-                callback(edge);
-            },
-            editEdge: true,
-            deleteNode: true,
-            deleteEdge: true,
-            controlNodeStyle:{
-                // all node options are valid.
-            }
-        },
-        // physics: {...},      // defined in the physics module.
-        physics: {
-            enabled: false,     // Stops node movement during display
-            stabilization: {    // Determines an initial layout; enabled by default
-                enabled: true,
-                iterations: 1000
-            }
-        },
-    };
-
-    //Se inicializa la librería que va a servir para ingresar datos
-    var container = document.getElementById('grafo');
-    var container2 = document.getElementById('grafo2');
-    var container3 = document.getElementById('grafo3');
-    // var data = { //ejemplo
-    //     nodes: nodes,
-    //     edges: edges
-    // };
-    var data = {
-        nodes: new MiDataSet( grafoHOptimo.nodes, function (e) {
-            return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
-        }),
-        edges: new vis.DataSet(grafoHOptimo.edges)
-    };
-    var data2 = {
-        nodes2: new vis.DataSet(),
-        edges2: new vis.DataSet()
-    };
-    var data3 = {
-        nodes3: new vis.DataSet(),
-        edges3: new vis.DataSet()
-    };
-    var network = new vis.Network(container, data, options);
-    var network2 = new vis.Network(container2, data2, options);
-    var network3 = new vis.Network(container3, data3, options);
-
-
-    //Manejo del menu contextual que hicimos
-    network.on("oncontext", function (params) {
-        params.event.preventDefault();
-        $('#context-menu button').hide();
-
-        //Depende de donde se clickeo se va a seleccionar lo que haya y mostrar
-        //las opciones adecuadas en el menu
-        let nodoID = network.getNodeAt(params.pointer.DOM);
-        if(typeof nodoID !== 'undefined') {
-            network.selectNodes([nodoID]);
-            $('#agregar-camino').show();
-            $('#eliminar-nodo').show();
-            $('#marcar-inicio').show();
-            $('#marcar-fin').show();
-        } else {
-            let rutaID = network.getEdgeAt(params.pointer.DOM);
-            if(typeof rutaID !== 'undefined') {
-                network.selectEdges([rutaID]);
-                $('#eliminar-camino').show();
-            } else {
-                $('#agregar-nodo').show();
-                $('#agregar-camino').show();
-            }
-        }
-
-        network.on('dragEnd', function(params){
-            if(params.nodes.length > 0) {
-                let nodes = data.nodes.get(params.nodes);
-                nodes[0].x = params.pointer.canvas.x;
-                nodes[0].y = params.pointer.canvas.y;
-
-                data.nodes.update(nodes[0]);
-
-                if(opciones.calcularH) {
-                    recalcularH();
-                }
-            }
-        });
-
-        //Guardo las coordenadas para usarlas en otras funciones
-        menuX = params.pointer.canvas.x;
-        menuY = params.pointer.canvas.y;
-
-        //Acomodo el menu donde tiene que ir y lo muestro
-        $("#context-menu").finish().toggle(100);
-        $("#context-menu").css({
-            top: params.event.pageY + "px",
-            left: params.event.pageX + "px"
-        });
-    });
-
-    //Si hago click en otro lado escondo el menu
-    network.on("click", function(params) {
-        $("#context-menu").removeClass("show").hide();
-    });
-    $(document).on("click", function() {
-        $("#context-menu").removeClass("show").hide();
-    });
 
 
     function getLetraDisponible() {
         for(i=65;i<97;i++) {
             label = String.fromCharCode(i);
             let disponible = true;
-            data.nodes.forEach(function(e) {
+            dataGrafo.nodes.forEach(function(e) {
                 if(e.id == label) {
                     disponible = false;
                     return false;
@@ -294,7 +114,7 @@
 
     function getNodoByID(id) {
         let nodo = null;
-        data.nodes.forEach(function(e) {
+        dataGrafo.nodes.forEach(function(e) {
             if(e.id == id) {
                 nodo = e;
             }
@@ -314,45 +134,45 @@
         }
 
         let nodo = new NodoGrafo(label, h, menuX, menuY, false, false);
-        data.nodes.add(nodo);
+        dataGrafo.nodes.add(nodo);
 
         if(opciones.calcularH) recalcularH();
     }
 
     function marcarInicio() {
-        let nodoSeleccionado = network.getSelectedNodes();
-        let nodos = data.nodes.get();
+        let nodoSeleccionado = networkGrafo.getSelectedNodes();
+        let nodos = dataGrafo.nodes.get();
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
                 e.setInicio(false);
             });
         }
 
-        data.nodes.update(nodos);
+        dataGrafo.nodes.update(nodos);
 
         if(nodoSeleccionado.length > 0) {
-            nodoSeleccionado = data.nodes.get(nodoSeleccionado[0]);
+            nodoSeleccionado = dataGrafo.nodes.get(nodoSeleccionado[0]);
             nodoSeleccionado.setInicio(true);
-            data.nodes.update(nodoSeleccionado);
+            dataGrafo.nodes.update(nodoSeleccionado);
         }
     }
 
     function marcarFin() {
-        let nodoSeleccionado = network.getSelectedNodes();
-        let nodos = data.nodes.get();
+        let nodoSeleccionado = networkGrafo.getSelectedNodes();
+        let nodos = dataGrafo.nodes.get();
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
                 e.setFin(false);
             });
         }
 
-        data.nodes.update(nodos);
+        dataGrafo.nodes.update(nodos);
 
         if(nodoSeleccionado.length > 0) {
-            nodoSeleccionado = data.nodes.get(nodoSeleccionado[0]);
+            nodoSeleccionado = dataGrafo.nodes.get(nodoSeleccionado[0]);
             nodoSeleccionado.setFin(true);
             nodoSeleccionado.setH(0);
-            data.nodes.update(nodoSeleccionado);
+            dataGrafo.nodes.update(nodoSeleccionado);
         }
 
         if(opciones.calcularH) recalcularH();
@@ -364,7 +184,7 @@
 
     function getNodoInicial() {
         let nodo = null;
-        data.nodes.forEach(function(e) {
+        dataGrafo.nodes.forEach(function(e) {
             if(e.inicio) nodo = e;
         });
 
@@ -373,7 +193,7 @@
 
     function getNodoFinal() {
         let nodo = null;
-        data.nodes.forEach(function(e) {
+        dataGrafo.nodes.forEach(function(e) {
             if(e.fin) nodo = e;
         });
 
@@ -394,7 +214,7 @@
             return;
         }
 
-        var aEstrella = new AEstrella(data.nodes.get());
+        var aEstrella = new AEstrella(dataGrafo.nodes.get());
         aEstrella.resolver();
 
     }
@@ -427,7 +247,7 @@
 
     function recalcularH() {
         let nodoFinal = getNodoFinal();
-        let nodos = data.nodes.get();
+        let nodos = dataGrafo.nodes.get();
             nodos.forEach(function (e) {
                 if(nodoFinal != null) {
                     if (e.id != nodoFinal.id) {
@@ -440,18 +260,18 @@
 
 
             });
-            data.nodes.update(nodos);
+            dataGrafo.nodes.update(nodos);
     }
 
     function borrarH() {
-        let nodos = data.nodes.get();
+        let nodos = dataGrafo.nodes.get();
         nodos.forEach(function(e) {
             if(!e.fin) {
                 e.setH(null);
             }
         });
 
-        data.nodes.update(nodos);
+        dataGrafo.nodes.update(nodos);
     }
 
     $(document).ready(function() {
@@ -465,10 +285,17 @@
 
     function guardarComoJSON() {
         console.log(JSON.stringify({
-            nodes: data.nodes.get(),
-            edges: data.edges.get()
+            nodes: dataGrafo.nodes.get(),
+            edges: dataGrafo.edges.get()
         }));
     }
 </script>
+<script src="js/NodoGrafo.js"></script>
+<script src="js/NodoArbol.js"></script>
+<script src="js/AEstrella.js"></script>
+<script src="js/grafos.js"></script>
+<script src="js/MiDataSet.js"></script>
+<script src="js/configGrafo.js"></script>
+<script src="js/configArbol.js"></script>
 </body>
 </html>
