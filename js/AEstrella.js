@@ -13,7 +13,7 @@ class AEstrella {
     resolver() {
         let t = 0;
         //creo el nodo inicial del arbol
-        this.inicioArbol = new NodoArbol(this.inicio, 0, null);
+        this.inicioArbol = new NodoArbol(this.inicio, 0, null, t);
         this.lineaLog(t, 'Agrego el nodo inicial');
         this.lineaLog(t, this.inicioArbol.getStrF());
         let abiertos = [this.inicioArbol];
@@ -49,26 +49,27 @@ class AEstrella {
                 abiertos.splice(abiertos.indexOf(minimo),1);
 
                 //expando y tengo los nuevos nodos
-                nuevosNodos = minimo.expandir();
+                nuevosNodos = minimo.expandir(t);
+                minimo.cerrar(t, false);
                 nuevosNodos.forEach(function (e) {this.lineaLog(t,e.getStrF())}, this);
 
                 //ahora que tengo nuevos nodos me fijo si puedo cerrar algunos
-                nuevosNodos.filter(function(n) {
+                nuevosNodos = nuevosNodos.filter(function(n) {
                     //filter es una funcion que recorre el array, y devuelve los elementos
                     //de las iteraciones en las que devuelvo true
                     let mantenerNuevo = true;
                     abiertos = abiertos.filter(function (a) {
                         //Si son del mismo nodo, comparo y cierro el que corresponda
-                        if(n.nodo == a.nodo) {
+                        if(n.nodo.id == a.nodo.id) {
                             //si un nodo abierto coincide con un nuevo, lo comparo y dejo
                             //el mejor, si son iguales dejo ambos
                             if(a.f > n.f) {
-                                this.lineaLog(t, 'Cierro el nodo ' + a.nodo.id + 'con f\' = ' + a.f)
-                                a.cerrar();
+                                this.lineaLog(t, 'Cierro el nodo ' + a.nodo.id + ' con f\' = ' + a.f)
+                                a.cerrar(t, true);
                                 return false;
                             } else if(a.f != n.f) {
-                                this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + 'con f\' = ' + n.f)
-                                n.cerrar();
+                                this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f)
+                                n.cerrar(t, true);
                                 mantenerNuevo = false;
                             }
                         }
@@ -81,28 +82,27 @@ class AEstrella {
                 nuevosNodos.forEach(function(e){abiertos.push(e);});
             }
         }
+        this.t = t;
         if(solucion == null) {
             this.lineaLog(t, 'No se pudo encontrar solución');
         } else {
             this.lineaLog(t, 'Se encontró el camino: ' + solucion.getStrCamino());
-            this.armarSolucion(solucion);
+            this.solucion = solucion;
+            this.armarArbol(t);
+            $('#explicacion').html(this.parseLog());
         }
     }
-    armarSolucion(solucion) {
-        this.solucion = solucion;
-        console.log(this.inicioArbol);
-        console.log(this.solucion);
-        console.log(this.log);
-        this.solucion.marcarSolucion();
-
+    armarArbol(t) {
+        this.inicioArbol.marcarColor(t, t == this.t);
         dataArbol = {
-            nodes: this.inicioArbol.getNodosArbol(),
-            edges: this.inicioArbol.getCaminosArbol()
+            nodes: this.inicioArbol.getNodosArbol(t),
+            edges: this.inicioArbol.getCaminosArbol(t)
         };
 
         var networkArbol = new vis.Network(containerArbol, dataArbol, optionsArbol);
-        console.log(this.parseLog());
-        $('#explicacion').html(this.parseLog());
+        networkArbol.on('resize', function(params) {
+            networkArbol.fit();
+        });
     }
     lineaLog(t, txt) {
         if(!Array.isArray(this.log[t])) {
@@ -114,10 +114,13 @@ class AEstrella {
     parseLog() {
         let str = '';
         this.log.forEach(function (e,i) {
-            str+= "<h5>t = " + i + "</h5>\n";
+            str+='<div id="log-'+i+'" class="card m-2 card-log" style="cursor: pointer" onclick="mostrarPasoLog('+i+')">';
+            str+= "<div class='card-header'>t = " + i + "</div>\n";
+            str+= '<div class="card-body">';
             e.forEach(function (e) {
-                str+= "<p>" + e + "</p>\n";
+                str+= "<p class='card-text'>" + e + "</p>\n";
             });
+            str+='</div></div>';
         });
 
         return str;

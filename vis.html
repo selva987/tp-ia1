@@ -52,32 +52,36 @@
         </div>
     </nav>
 </header>
+<main role="main" class="container-fluid">
+    <div class="h-100 d-flex p-2 justify-content-between align-items-center flex-grow-1" >
+        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+            <div id="grafo" class="card-body"></div>
+        </div>
+        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+            <div id="arbol" class="card-body"></div>
+        </div>
+        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+            <div id="explicacion" class="card-body" style="overflow-y: auto"></div>
+        </div>
+    </div>
 
-<div class="row" style="height: 100%;">
-    <div class="card" style="height: 98%; width: 33%;">
-        <div id="grafo" class="card-body"></div>
+    <div>
+        <a style="display: none;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
+        <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+            <button id="agregar-nodo" class="btn btn-link dropdown-item" onclick="agregarNodo();">Agregar nodo</button>
+            <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');networkGrafo.addEdgeMode()">Agregar camino</button>
+            <button id="editar-nodo" class="btn btn-link dropdown-item" onclick="editarHNodo()">Editar nodo</button>
+            <button id="eliminar-nodo" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar nodo</button>
+            <button id="marcar-inicio" class="btn btn-link dropdown-item" onclick="marcarInicio()">Marcar como inicio</button>
+            <button id="marcar-fin" class="btn btn-link dropdown-item" onclick="marcarFin()">Marcar como fin</button>
+            <button id="eliminar-camino" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar camino</button>
+        </div>
     </div>
-    <div class="card" style="height: 98%; width: 33%;">
-        <div id="arbol" class="card-body"></div>
-    </div>
-    <div class="card" style="height: 98%; width: 33%;">
-        <div id="explicacion" class="card-body" style="overflow-y: auto"></div>
-    </div>
-</div>
-
-<div>
-<a style="display: none;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
-<div class="dropdown-menu dropdown-menu-sm" id="context-menu">
-    <button id="agregar-nodo" class="btn btn-link dropdown-item" onclick="agregarNodo();">Agregar nodo</button>
-    <button id="eliminar-nodo" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar nodo</button>
-    <button id="marcar-inicio" class="btn btn-link dropdown-item" onclick="marcarInicio()">Marcar como inicio</button>
-    <button id="marcar-fin" class="btn btn-link dropdown-item" onclick="marcarFin()">Marcar como fin</button>
-    <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');networkGrafo.addEdgeMode()">Agregar camino</button>
-    <button id="eliminar-camino" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar camino</button>
-</div>
-</div>
+</main>
 
 <script>
+
+    var aEstrella;
 
     //Opciones generales de la aplicación
     var opciones = {
@@ -214,7 +218,7 @@
             return;
         }
 
-        var aEstrella = new AEstrella(dataGrafo.nodes.get());
+        aEstrella = new AEstrella(dataGrafo.nodes.get());
         aEstrella.resolver();
 
     }
@@ -263,6 +267,18 @@
             dataGrafo.nodes.update(nodos);
     }
 
+    function editarHNodo() {
+        let nodo = dataGrafo.nodes.get(networkGrafo.getSelectedNodes());
+        if(nodo.length > 0) {
+            let h = null;
+            h = prompt('Ingrese H', 0);
+            if(h == null) return;
+            h = parseInt(h);
+            nodo[0].setH(h);
+            dataGrafo.nodes.update(nodo);
+        }
+    }
+
     function borrarH() {
         let nodos = dataGrafo.nodes.get();
         nodos.forEach(function(e) {
@@ -288,6 +304,12 @@
             nodes: dataGrafo.nodes.get(),
             edges: dataGrafo.edges.get()
         }));
+    }
+
+    function mostrarPasoLog(t) {
+        $('.card-log').removeClass('shadow border border-primary');
+        $('#log-'+t).addClass('shadow border border-primary');
+        aEstrella.armarArbol(t);
     }
 </script>
 <script src="js/NodoGrafo.js"></script>

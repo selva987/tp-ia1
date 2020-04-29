@@ -79,6 +79,13 @@ var optionsGrafo = {
 
 var container = document.getElementById('grafo');
 
+// var dataGrafo = {
+//     nodes: new MiDataSet( null, function (e) {
+//         return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
+//     }),
+//     edges: new vis.DataSet(null)
+// };
+// grafo grande
 var dataGrafo = {
     nodes: new MiDataSet( grafoPractica.nodes, function (e) {
         return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
@@ -99,6 +106,7 @@ networkGrafo.on("oncontext", function (params) {
     if(typeof nodoID !== 'undefined') {
         networkGrafo.selectNodes([nodoID]);
         $('#agregar-camino').show();
+        $('#editar-nodo').show();
         $('#eliminar-nodo').show();
         $('#marcar-inicio').show();
         $('#marcar-fin').show();
@@ -143,6 +151,11 @@ networkGrafo.on("oncontext", function (params) {
 networkGrafo.on("click", function(params) {
     $("#context-menu").removeClass("show").hide();
 });
+
+networkGrafo.on('resize', function(params) {
+    networkGrafo.fit();
+});
+
 $(document).on("click", function() {
     $("#context-menu").removeClass("show").hide();
 });
