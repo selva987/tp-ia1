@@ -12,6 +12,9 @@ var optionsGrafo = {
             inherit: false,
             color:'#848484',
             highlight:'#848484',
+        },
+        smooth: {
+            enabled: false
         }
     },        // defined in the edges module.
     // nodes: {...},        // defined in the nodes module.
@@ -115,25 +118,12 @@ networkGrafo.on("oncontext", function (params) {
         if(typeof rutaID !== 'undefined') {
             networkGrafo.selectEdges([rutaID]);
             $('#eliminar-camino').show();
+            $('#editar-camino').show();
         } else {
             $('#agregar-nodo').show();
             $('#agregar-camino').show();
         }
     }
-
-    networkGrafo.on('dragEnd', function(params){
-        if(params.nodes.length > 0) {
-            let nodes = dataGrafo.nodes.get(params.nodes);
-            nodes[0].x = params.pointer.canvas.x;
-            nodes[0].y = params.pointer.canvas.y;
-
-            dataGrafo.nodes.update(nodes[0]);
-
-            if(opciones.calcularH) {
-                recalcularH();
-            }
-        }
-    });
 
     //Guardo las coordenadas para usarlas en otras funciones
     menuX = params.pointer.canvas.x;
@@ -145,6 +135,22 @@ networkGrafo.on("oncontext", function (params) {
         top: params.event.pageY + "px",
         left: params.event.pageX + "px"
     });
+});
+
+networkGrafo.on('dragEnd', function(params){
+    debugger;
+    if(params.nodes.length > 0) {
+        let nodes = dataGrafo.nodes.get(params.nodes);
+        nodes[0].x = params.pointer.canvas.x;
+        nodes[0].y = params.pointer.canvas.y;
+
+        dataGrafo.nodes.update(nodes[0]);
+
+        if(opciones.calcularH) {
+            recalcularH();
+            recalcularPesoCaminos();
+        }
+    }
 });
 
 //Si hago click en otro lado escondo el menu

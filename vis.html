@@ -69,8 +69,9 @@
         <a style="display: none;" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></a>
         <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
             <button id="agregar-nodo" class="btn btn-link dropdown-item" onclick="agregarNodo();">Agregar nodo</button>
-            <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');networkGrafo.addEdgeMode()">Agregar camino</button>
             <button id="editar-nodo" class="btn btn-link dropdown-item" onclick="editarHNodo()">Editar nodo</button>
+            <button id="agregar-camino" class="btn btn-link dropdown-item" onclick="setLabel('Arrastre desde y hacia el nodo que quiera conectar');networkGrafo.addEdgeMode()">Agregar camino</button>
+            <button id="editar-camino" class="btn btn-link dropdown-item" onclick="editarPesoCamino()">Editar camino</button>
             <button id="eliminar-nodo" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar nodo</button>
             <button id="marcar-inicio" class="btn btn-link dropdown-item" onclick="marcarInicio()">Marcar como inicio</button>
             <button id="marcar-fin" class="btn btn-link dropdown-item" onclick="marcarFin()">Marcar como fin</button>
@@ -244,8 +245,10 @@
         opciones.calcularH = valor;
         if(valor) {
             recalcularH();
+            recalcularPesoCaminos();
         } else {
             borrarH();
+            borrarPesoCaminos();
         }
     }
 
@@ -255,16 +258,32 @@
             nodos.forEach(function (e) {
                 if(nodoFinal != null) {
                     if (e.id != nodoFinal.id) {
-                        h = Math.sqrt(Math.pow((nodoFinal.x - e.x), 2) + Math.pow((nodoFinal.y - e.y), 2));
+                        h = calcularDistancia(e, nodoFinal);
                     } else {
                         h = 0;
                     }
-                    e.setH(parseInt(h));
+                    e.setH(h);
                 } else e.setH(null);
 
 
             });
             dataGrafo.nodes.update(nodos);
+    }
+
+    function calcularDistancia(nodo1, nodo2) {
+        return parseInt(Math.sqrt(Math.pow((nodo2.x - nodo1.x), 2) + Math.pow((nodo2.y - nodo1.y), 2)));
+    }
+
+    function recalcularPesoCaminos() {
+        let caminos = dataGrafo.edges.get();
+        let nodos;
+        caminos.forEach(function (e) {
+            nodos = dataGrafo.nodes.get([e.from, e.to]);
+            e.peso = calcularDistancia(nodos[0],nodos[1]);
+            e.label = e.peso.toString();
+        });
+
+        dataGrafo.edges.update(caminos);
     }
 
     function editarHNodo() {
@@ -278,6 +297,18 @@
             dataGrafo.nodes.update(nodo);
         }
     }
+    function editarPesoCamino() {
+        let camino = dataGrafo.edges.get(networkGrafo.getSelectedEdges());
+        if(camino.length > 0) {
+            let h = null;
+            h = prompt('Ingrese peso', 0);
+            if(h == null) return;
+            h = parseInt(h);
+            camino[0].peso = h;
+            camino[0].label = h.toString();
+            dataGrafo.edges.update(camino);
+        }
+    }
 
     function borrarH() {
         let nodos = dataGrafo.nodes.get();
@@ -288,6 +319,16 @@
         });
 
         dataGrafo.nodes.update(nodos);
+    }
+
+    function borrarPesoCaminos() {
+        let edges = dataGrafo.edges.get();
+        edges.forEach(function(e) {
+            e.peso = null;
+            e.label = '???';
+        });
+
+        dataGrafo.edges.update(edges);
     }
 
     $(document).ready(function() {
