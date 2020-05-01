@@ -2,9 +2,9 @@
  * Este es el nodo que va en el arbol de resolución
  */
 
-class NodoArbol {
+class NodoArbol extends ElementoGrafico{
     constructor(nodo, g, padre, t) {
-        this.id = nodo.id;
+        super(nodo.id, '');
         this.t = t;
         if(padre != null) {
             this.id += padre.id;

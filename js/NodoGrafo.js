@@ -1,9 +1,10 @@
 /**
  * Este es el nodo del grafo que se dibuja
  */
-class NodoGrafo {
+class NodoGrafo extends ElementoGrafico{
 
     constructor(id, h, x, y, inicio, fin) {
+        super(id, '');
         this.id = id;
         this.setH(h);
         this.x = x;
