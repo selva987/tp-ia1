@@ -584,3 +584,182 @@ var sinSolucion = {
         "id": "AC"
     }]
 };
+
+var ejemplo1 = {
+    "nodes": [{
+        "id": "A",
+        "label": "A: 314",
+        "h": 314,
+        "x": -140.6666717529297,
+        "y": -81.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "B",
+        "label": "B: 302",
+        "h": 302,
+        "x": -85.66667175292969,
+        "y": -152.1666717529297,
+        "inicio": true,
+        "color": {
+            "border": "#f5c6cb",
+            "background": "#f8d7da",
+            "highlight": {"border": "#dc3545", "background": "#dc3545"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "C",
+        "label": "C: 267",
+        "h": 267,
+        "x": -114.66667175292969,
+        "y": 29.833328247070312,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "D",
+        "label": "D: 215",
+        "h": 215,
+        "x": -51.66667175292969,
+        "y": -34.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "E",
+        "label": "E: 193",
+        "h": 193,
+        "x": 17.333328247070312,
+        "y": -105.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "F",
+        "label": "F: 207",
+        "h": 207,
+        "x": 84.33332824707031,
+        "y": -162.1666717529297,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "G",
+        "label": "G: 69",
+        "h": 69,
+        "x": 134.3333282470703,
+        "y": -33.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "H",
+        "label": "H: 119",
+        "h": 119,
+        "x": 38.33332824707031,
+        "y": 70.83332824707031,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "I",
+        "label": "I: 0",
+        "h": 0,
+        "x": 152.3333282470703,
+        "y": 33.83332824707031,
+        "inicio": false,
+        "color": {
+            "border": "#c3e6cb",
+            "background": "#d4edda",
+            "highlight": {"border": "#28a745", "background": "#28a745"}
+        },
+        "fin": true,
+        "vecinos": null
+    }],
+    "edges": [{"from": "F", "to": "B", "label": "170", "peso": 170, "id": "BF"}, {
+        "from": "F",
+        "to": "E",
+        "label": "87",
+        "peso": 87,
+        "id": "EF"
+    }, {"from": "E", "to": "B", "label": "113", "peso": 113, "id": "BE"}, {
+        "from": "E",
+        "to": "G",
+        "label": "137",
+        "peso": 137,
+        "id": "EG"
+    }, {"from": "F", "to": "G", "label": "138", "peso": 138, "id": "FG"}, {
+        "from": "A",
+        "to": "B",
+        "label": "89",
+        "peso": 89,
+        "id": "AB"
+    }, {"from": "A", "to": "E", "label": "159", "peso": 159, "id": "AE"}, {
+        "from": "D",
+        "to": "E",
+        "label": "99",
+        "peso": 99,
+        "id": "DE"
+    }, {"from": "E", "to": "H", "label": "177", "peso": 177, "id": "EH"}, {
+        "from": "D",
+        "to": "I",
+        "label": "215",
+        "peso": 215,
+        "id": "DI"
+    }, {"from": "H", "to": "C", "label": "158", "peso": 158, "id": "CH"}, {
+        "from": "C",
+        "to": "A",
+        "label": "114",
+        "peso": 114,
+        "id": "AC"
+    }, {"from": "C", "to": "I", "label": "267", "peso": 267, "id": "CI"}, {
+        "from": "G",
+        "to": "D",
+        "label": "186",
+        "peso": 186,
+        "id": "DG"
+    }, {"from": "C", "to": "D", "label": "89", "peso": 89, "id": "CD"}, {
+        "from": "H",
+        "to": "I",
+        "label": "119",
+        "peso": 119,
+        "id": "HI"
+    }]
+}

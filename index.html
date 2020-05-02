@@ -47,6 +47,8 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item" onclick="alterarValores()">Alterar valores</a>
                         <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="modalExportar()">Importar/Exportar</a>
+                        <div class="dropdown-divider"></div>
                         <button type="button" class="btn btn-link dropdown-item" onclick="$('#modalAcercaDe').modal();">Acerca de...</button>
                     </div>
                 </li>
@@ -81,6 +83,25 @@
             <button id="marcar-inicio" class="btn btn-link dropdown-item" onclick="marcarInicio()">Marcar como inicio</button>
             <button id="marcar-fin" class="btn btn-link dropdown-item" onclick="marcarFin()">Marcar como fin</button>
             <button id="eliminar-camino" class="btn btn-link dropdown-item" onclick="networkGrafo.deleteSelected()">Eliminar camino</button>
+        </div>
+    </div>
+    <div class="modal fade" id="modalImportarExportar" tabindex="-1" role="dialog" aria-labelledby="acercaDeTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importarExportarTitle">Importar/Exportar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="w-100" autocomplete="off" id="strJSON"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="copiar();">Copiar</button>
+                    <button type="button" class="btn btn-danger" onclick="importar();">Importar</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal fade" id="modalAcercaDe" tabindex="-1" role="dialog" aria-labelledby="acercaDeTitle" aria-hidden="true">
@@ -372,10 +393,10 @@
     });
 
     function guardarComoJSON() {
-        console.log(JSON.stringify({
+        return JSON.stringify({
             nodes: dataGrafo.nodes.get(),
             edges: dataGrafo.edges.get()
-        }));
+        });
     }
 
     function mostrarPasoLog(t) {
@@ -434,6 +455,32 @@
         });
 
         dataGrafo.nodes.update(nodos);
+    }
+
+    function modalExportar() {
+        $('#modalImportarExportar').modal();
+        $('#strJSON').html(guardarComoJSON());
+    }
+
+    function importar() {
+        let str = $('#strJSON').val();
+        try {
+            cargarEjemplo(JSON.parse(str));
+            $('#modalImportarExportar').modal('hide');
+        } catch (e) {
+            alert('El JSON ingresado no es válido');
+        }
+    }
+
+
+    /**
+     * Basado en:
+     * https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+     */
+    function copiar() {
+        const textarea = document.getElementById('strJSON');
+        textarea.select();
+        document.execCommand('copy');
     }
 </script>
 <script src="js/ElementoGrafico.js"></script>

@@ -94,7 +94,7 @@ class AEstrella {
         $('#explicacion').html(this.parseLog());
     }
 
-    
+
     armarArbol(t) {
         this.inicioArbol.marcarColor(t, t == this.t);
         dataArbol = {
