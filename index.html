@@ -45,6 +45,8 @@
                             </div>
                         </div>
                         <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="alterarValores()">Alterar valores</a>
+                        <div class="dropdown-divider"></div>
                         <button type="button" class="btn btn-link dropdown-item" onclick="$('#modalAcercaDe').modal();">Acerca de...</button>
                     </div>
                 </li>
@@ -260,9 +262,9 @@
             event.stopPropagation();
         });
 
-        $('#menu-config').on('click', function(event) {
-            event.stopPropagation();
-        });
+        // $('#menu-config').on('click', function(event) {
+        //     event.stopPropagation();
+        // });
 
         $(window).on('click', function() {
             $('#menu-config').slideUp();
@@ -393,6 +395,45 @@
         $('#arbol').html('');
         $('#explicacion').html('');
 
+    }
+
+    /**
+     * Snippet de generación aleatoria sacado de:
+     * https://redstapler.co/javascript-random-number-between-range/
+     */
+    function alterarValores() {
+        let rango = null;
+        rango =prompt('Ingrese el rango de valores (formato: min,max)');
+        if(rango == null) return;
+
+        if(!rango.indexOf(',')) {
+            alert('Ingrese el rango en formato adecuado');
+            return;
+        }
+        rango = rango.split(',');
+        if(rango.length != 2) {
+            alert('Ingrese el rango en formato adecuado');
+            return;
+        }
+        if(Number.isNaN(parseInt(rango[0])) || Number.isNaN(parseInt(rango[1]))) {
+            alert('Ingrese el rango en formato adecuado');
+            return;
+        }
+
+        let min = parseInt(rango[0]);
+        let max = parseInt(rango[1]);
+        let aleatorio;
+
+        let nodos = dataGrafo.nodes.get();
+        nodos.forEach(function (e) {
+            //no toco el nodo final
+            if(!e.fin) {
+                aleatorio = Math.floor(Math.random()*(max-min+1)+min);
+                e.setH(e.h + aleatorio);
+            }
+        });
+
+        dataGrafo.nodes.update(nodos);
     }
 </script>
 <script src="js/ElementoGrafico.js"></script>

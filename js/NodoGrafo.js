@@ -15,6 +15,7 @@ class NodoGrafo extends ElementoGrafico{
     }
 
     setH(h) {
+        if(h < 0) h = 0;
         this.h = h;
         this.label = this.id + ': ' + (this.h != null ? this.h : '???');
     }

@@ -116,25 +116,25 @@ var grafoHOptimo = {
         "fin": true,
         "vecinos": null
     }],
-    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 1, "id": "AB"}, {
+    "edges": [{"from": "A", "to": "B", "label": "10", "peso": 10, "id": "AB"}, {
         "from": "A",
         "to": "C",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "AC"
-    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
+    }, {"from": "A", "to": "D", "label": "10", "peso": 10, "id": "AD"}, {
         "from": "B",
         "to": "E",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "BE"
-    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
+    }, {"from": "C", "to": "E", "label": "10", "peso": 10, "id": "CE"}, {
         "from": "E",
         "to": "F",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "EF"
-    }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
+    }, {"from": "F", "to": "D", "label": "10", "peso": 10, "id": "DF"}]
 }
 
 var grafoHSobreestimado = {
@@ -223,25 +223,25 @@ var grafoHSobreestimado = {
         "fin": true,
         "vecinos": null
     }],
-    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 1, "id": "AB"}, {
+    "edges": [{"from": "A", "to": "B", "label": "10", "peso": 10, "id": "AB"}, {
         "from": "A",
         "to": "C",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "AC"
-    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
+    }, {"from": "A", "to": "D", "label": "10", "peso": 10, "id": "AD"}, {
         "from": "B",
         "to": "E",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "BE"
-    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
+    }, {"from": "C", "to": "E", "label": "10", "peso": 10, "id": "CE"}, {
         "from": "E",
         "to": "F",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "EF"
-    }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
+    }, {"from": "F", "to": "D", "label": "10", "peso": 10, "id": "DF"}]
 }
 
 var grafoHSubestimado = {
@@ -330,25 +330,25 @@ var grafoHSubestimado = {
         "fin": true,
         "vecinos": null
     }],
-    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 1, "id": "AB"}, {
+    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 10, "id": "AB"}, {
         "from": "A",
         "to": "C",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "AC"
-    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
+    }, {"from": "A", "to": "D", "label": "10", "peso": 10, "id": "AD"}, {
         "from": "B",
         "to": "E",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "BE"
-    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
+    }, {"from": "C", "to": "E", "label": "10", "peso": 10, "id": "CE"}, {
         "from": "E",
         "to": "F",
-        "label": "1",
+        "label": "10",
         "peso": 10,
         "id": "EF"
-    }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
+    }, {"from": "F", "to": "D", "label": "10", "peso": 10, "id": "DF"}]
 }
 
 var grafoPractica = {

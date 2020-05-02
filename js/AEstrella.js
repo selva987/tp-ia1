@@ -34,6 +34,7 @@ class AEstrella {
                     if(solucion == null || e.f < solucion.f) solucion = e;
                 }
 
+                //Si es mejor que el mejor que tengo hasta ahora, lo guardo
                 if(minimo == null || e.f < minimo.f) minimo = e;
             }, this);
 
@@ -77,10 +78,11 @@ class AEstrella {
                     return mantenerNuevo;
                 }, this);
 
-                //finalmente guardo los nodos nuevos que me quedaron
+                //finalmente guardo en la lista de abiertos los nodos nuevos que me quedaron
                 nuevosNodos.forEach(function(e){abiertos.push(e);});
             }
         }
+        //Termine de explorar, hora de ver si tengo o no solucion
         this.t = t;
         if(solucion == null) {
             this.lineaLog(t, 'No se pudo encontrar solución ya que no tengo más nodos para expandir');
@@ -91,6 +93,8 @@ class AEstrella {
         this.armarArbol(t);
         $('#explicacion').html(this.parseLog());
     }
+
+    
     armarArbol(t) {
         this.inicioArbol.marcarColor(t, t == this.t);
         dataArbol = {
@@ -103,6 +107,8 @@ class AEstrella {
             networkArbol.fit();
         });
     }
+
+
     lineaLog(t, txt) {
         if(!Array.isArray(this.log[t])) {
             this.log[t] = [];
