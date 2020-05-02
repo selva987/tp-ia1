@@ -37,17 +37,22 @@ var optionsGrafo = {
             let peso = null;
             let arrNombre = [edge.from, edge.to];
 
-            while(peso == null) {
-                peso = prompt('Ingrese el peso de la ruta, solo se admiten números enteros', 0);
-                if(!peso || peso == '0') {
-                    networkGrafo.disableEditMode();
-                    return false;
-                }
+            if(opciones.calcularH) {
+                let nodos = dataGrafo.nodes.get([edge.from, edge.to]);
+                peso = calcularDistancia(nodos[0], nodos[1]);
+            } else {
+                while (peso == null) {
+                    peso = prompt('Ingrese el peso de la ruta, solo se admiten números enteros', 0);
+                    if (!peso || peso == '0') {
+                        networkGrafo.disableEditMode();
+                        return false;
+                    }
 
-                peso = parseInt(peso);
+                    peso = parseInt(peso);
 
-                if(!Number.isInteger(peso)) {
-                    peso = null;
+                    if (!Number.isInteger(peso)) {
+                        peso = null;
+                    }
                 }
             }
 
@@ -82,18 +87,11 @@ var optionsGrafo = {
 
 var container = document.getElementById('grafo');
 
-// var dataGrafo = {
-//     nodes: new MiDataSet( null, function (e) {
-//         return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
-//     }),
-//     edges: new vis.DataSet(null)
-// };
-// grafo grande
 var dataGrafo = {
-    nodes: new MiDataSet( grafoPractica.nodes, function (e) {
+    nodes: new MiDataSet( null, function (e) {
         return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
     }),
-    edges: new vis.DataSet(grafoPractica.edges)
+    edges: new vis.DataSet(null)
 };
 
 var networkGrafo = new vis.Network(container, dataGrafo, optionsGrafo);

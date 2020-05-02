@@ -1,6 +1,5 @@
 class AEstrella {
     constructor(nodos) {
-        this.nodos = nodos;
         this.log = [];
         //cargo inicio y fin
         nodos.forEach(function(e) {
@@ -84,13 +83,13 @@ class AEstrella {
         }
         this.t = t;
         if(solucion == null) {
-            this.lineaLog(t, 'No se pudo encontrar solución');
+            this.lineaLog(t, 'No se pudo encontrar solución ya que no tengo más nodos para expandir');
         } else {
             this.lineaLog(t, 'Se encontró el camino: ' + solucion.getStrCamino());
             this.solucion = solucion;
-            this.armarArbol(t);
-            $('#explicacion').html(this.parseLog());
         }
+        this.armarArbol(t);
+        $('#explicacion').html(this.parseLog());
     }
     armarArbol(t) {
         this.inicioArbol.marcarColor(t, t == this.t);

@@ -33,7 +33,7 @@ var ejemploSimple = {
 var grafoHOptimo = {
     "nodes": [{
         "id": "A",
-        "h": 3,
+        "h": 30,
         "label": "A: 3",
         "x": 16.5,
         "y": -244.8333282470703,
@@ -47,7 +47,7 @@ var grafoHOptimo = {
         "vecinos": null
     }, {
         "id": "B",
-        "h": 2,
+        "h": 20,
         "label": "B: 2",
         "x": -131.5,
         "y": -177.8333282470703,
@@ -61,7 +61,7 @@ var grafoHOptimo = {
         "vecinos": null
     }, {
         "id": "C",
-        "h": 2,
+        "h": 20,
         "label": "C: 2",
         "x": 9.5,
         "y": -170.8333282470703,
@@ -75,7 +75,7 @@ var grafoHOptimo = {
         "vecinos": null
     }, {
         "id": "D",
-        "h": 1,
+        "h": 10,
         "label": "D: 1",
         "x": 146.5,
         "y": -164.8333282470703,
@@ -89,7 +89,7 @@ var grafoHOptimo = {
         "vecinos": null
     }, {
         "id": "E",
-        "h": 1,
+        "h": 10,
         "label": "E: 1",
         "x": -78.5,
         "y": -49.83332824707031,
@@ -120,19 +120,233 @@ var grafoHOptimo = {
         "from": "A",
         "to": "C",
         "label": "1",
-        "peso": 1,
+        "peso": 10,
         "id": "AC"
-    }, {"from": "A", "to": "D", "label": "1", "peso": 1, "id": "AD"}, {
+    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
         "from": "B",
         "to": "E",
         "label": "1",
-        "peso": 1,
+        "peso": 10,
         "id": "BE"
-    }, {"from": "C", "to": "E", "label": "1", "peso": 1, "id": "CE"}, {
+    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
         "from": "E",
         "to": "F",
         "label": "1",
-        "peso": 1,
+        "peso": 10,
+        "id": "EF"
+    }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
+}
+
+var grafoHSobreestimado = {
+    "nodes": [{
+        "id": "A",
+        "h": 40,
+        "label": "A: 3",
+        "x": 16.5,
+        "y": -244.8333282470703,
+        "inicio": true,
+        "color": {
+            "border": "#f5c6cb",
+            "background": "#f8d7da",
+            "highlight": {"border": "#dc3545", "background": "#dc3545"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "B",
+        "h": 25,
+        "label": "B: 2",
+        "x": -131.5,
+        "y": -177.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "C",
+        "h": 29,
+        "label": "C: 2",
+        "x": 9.5,
+        "y": -170.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "D",
+        "h": 30,
+        "label": "D: 1",
+        "x": 146.5,
+        "y": -164.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "E",
+        "h": 13,
+        "label": "E: 1",
+        "x": -78.5,
+        "y": -49.83332824707031,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "F",
+        "h": 0,
+        "label": "F: 0",
+        "x": 30.5,
+        "y": 101.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#c3e6cb",
+            "background": "#d4edda",
+            "highlight": {"border": "#28a745", "background": "#28a745"}
+        },
+        "fin": true,
+        "vecinos": null
+    }],
+    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 1, "id": "AB"}, {
+        "from": "A",
+        "to": "C",
+        "label": "1",
+        "peso": 10,
+        "id": "AC"
+    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
+        "from": "B",
+        "to": "E",
+        "label": "1",
+        "peso": 10,
+        "id": "BE"
+    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
+        "from": "E",
+        "to": "F",
+        "label": "1",
+        "peso": 10,
+        "id": "EF"
+    }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
+}
+
+var grafoHSubestimado = {
+    "nodes": [{
+        "id": "A",
+        "h": 20,
+        "label": "A: 3",
+        "x": 16.5,
+        "y": -244.8333282470703,
+        "inicio": true,
+        "color": {
+            "border": "#f5c6cb",
+            "background": "#f8d7da",
+            "highlight": {"border": "#dc3545", "background": "#dc3545"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "B",
+        "h": 15,
+        "label": "B: 2",
+        "x": -131.5,
+        "y": -177.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "C",
+        "h": 17,
+        "label": "C: 2",
+        "x": 9.5,
+        "y": -170.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "D",
+        "h": 19,
+        "label": "D: 1",
+        "x": 146.5,
+        "y": -164.8333282470703,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "E",
+        "h": 18,
+        "label": "E: 1",
+        "x": -78.5,
+        "y": -49.83332824707031,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "F",
+        "h": 0,
+        "label": "F: 0",
+        "x": 30.5,
+        "y": 101.16667175292969,
+        "inicio": false,
+        "color": {
+            "border": "#c3e6cb",
+            "background": "#d4edda",
+            "highlight": {"border": "#28a745", "background": "#28a745"}
+        },
+        "fin": true,
+        "vecinos": null
+    }],
+    "edges": [{"from": "A", "to": "B", "label": "1", "peso": 1, "id": "AB"}, {
+        "from": "A",
+        "to": "C",
+        "label": "1",
+        "peso": 10,
+        "id": "AC"
+    }, {"from": "A", "to": "D", "label": "1", "peso": 10, "id": "AD"}, {
+        "from": "B",
+        "to": "E",
+        "label": "1",
+        "peso": 10,
+        "id": "BE"
+    }, {"from": "C", "to": "E", "label": "1", "peso": 10, "id": "CE"}, {
+        "from": "E",
+        "to": "F",
+        "label": "1",
+        "peso": 10,
         "id": "EF"
     }, {"from": "F", "to": "D", "label": "1", "peso": 1, "id": "DF"}]
 }
@@ -303,3 +517,70 @@ var grafoPractica = {
         "id": "PQ"
     }]
 }
+
+var sinSolucion = {
+    "nodes": [{
+        "id": "A",
+        "label": "A: 311",
+        "h": 311,
+        "x": -126.66667175292969,
+        "y": -164.5,
+        "inicio": true,
+        "color": {
+            "border": "#f5c6cb",
+            "background": "#f8d7da",
+            "highlight": {"border": "#dc3545", "background": "#dc3545"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "B",
+        "label": "B: 0",
+        "h": 0,
+        "x": 74.33332824707031,
+        "y": 73.5,
+        "inicio": false,
+        "color": {
+            "border": "#c3e6cb",
+            "background": "#d4edda",
+            "highlight": {"border": "#28a745", "background": "#28a745"}
+        },
+        "fin": true,
+        "vecinos": null
+    }, {
+        "id": "C",
+        "label": "C: 196",
+        "h": 196,
+        "x": -88.66667175292969,
+        "y": -36.5,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }, {
+        "id": "D",
+        "label": "D: 170",
+        "h": 170,
+        "x": 17.333328247070312,
+        "y": -87.5,
+        "inicio": false,
+        "color": {
+            "border": "#2B7CE9",
+            "background": "#97C2FC",
+            "highlight": {"border": "#2B7CE9", "background": "#D2E5FF"}
+        },
+        "fin": false,
+        "vecinos": null
+    }],
+    "edges": [{"from": "A", "to": "D", "label": "163", "peso": 163, "id": "AD"}, {
+        "from": "A",
+        "to": "C",
+        "label": "133",
+        "peso": 133,
+        "id": "AC"
+    }]
+};

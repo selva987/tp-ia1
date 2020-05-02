@@ -5,7 +5,6 @@
     <title>TP IA 1 A*</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/all.min.css">
 
     <script src="js/vis-network.min.js"></script>
     <script src="js/jquery-3.5.0.min.js"></script>
@@ -17,6 +16,7 @@
 <header>
     <nav class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between">
+
             <a href="#" class="navbar-brand d-flex align-items-center">
                 <strong>Búsqueda A<sup>*</sup></strong>
             </a>
@@ -26,11 +26,17 @@
                 </li>
             </ul>
             <ul class="nav justify-content-end">
-                <li class="nav-item">
-                    <button type="button" class="btn btn-outline-light" onclick="calcularRuta();">Calcular ruta</button>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Ejemplos</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" onclick="cargarEjemplo(grafoPractica);">Ejercicio práctico</a>
+                        <a class="dropdown-item" href="#" onclick="cargarEjemplo(grafoHOptimo);">h' óptimo</a>
+                        <a class="dropdown-item" href="#" onclick="cargarEjemplo(grafoHSobreestimado);">h' sobreestimado</a>
+                        <a class="dropdown-item" href="#" onclick="cargarEjemplo(grafoHSubestimado);">h' subestimado</a>
+                    </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <button id="botonConfig" class="btn btn-link nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-cog"></i></button>
+                <a id="botonConfig" class="nav-link text-white dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Opciones</a>
                     <div class="dropdown-menu dropdown-menu-right" id="menu-config">
                         <div class="dropdown-item">
                             <span>Opciones</span>
@@ -41,12 +47,11 @@
                                 <input type="checkbox" autocomplete="off" class="custom-control-input" id="switchCalcularH" onclick="setCalcularH(this.checked)">
                                 <label class="custom-control-label" for="switchCalcularH">Calcular h'</label>
                             </div>
-<!--                            <div class="form-check d-flex justify-content-between">-->
-<!--                                <input type="checkbox" autocomplete="off" class="form-check-input" id="switchCalcularH" onclick="setCalcularH(this.checked)">-->
-<!--                                <label class="form-check-label" for="switchCalcularH">Calcular h'</label>-->
-<!--                            </div>-->
                         </div>
                     </div>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="btn btn-outline-light" onclick="calcularRuta();">Calcular ruta</button>
                 </li>
             </ul>
         </div>
@@ -351,6 +356,19 @@
         $('.card-log').removeClass('shadow border border-primary');
         $('#log-'+t).addClass('shadow border border-primary');
         aEstrella.armarArbol(t);
+    }
+
+    function cargarEjemplo(ejemplo) {
+        dataGrafo = {
+            nodes: new MiDataSet( ejemplo.nodes, function (e) {
+                return new NodoGrafo(e.id, e.h, e.x, e.y, e.inicio, e.fin);
+            }),
+            edges: new vis.DataSet(ejemplo.edges)
+        };
+        networkGrafo.setData(dataGrafo);
+        $('#arbol').html('');
+        $('#explicacion').html('');
+
     }
 </script>
 <script src="js/ElementoGrafico.js"></script>
