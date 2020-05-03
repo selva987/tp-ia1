@@ -104,7 +104,9 @@ class AEstrella {
 
         var networkArbol = new vis.Network(containerArbol, dataArbol, optionsArbol);
         networkArbol.on('resize', function(params) {
-            networkArbol.fit();
+            setTimeout(function () {
+                networkArbol.fit();
+            },100);
         });
     }
 

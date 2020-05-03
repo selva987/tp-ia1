@@ -157,7 +157,9 @@ networkGrafo.on("click", function(params) {
 });
 
 networkGrafo.on('resize', function(params) {
-    networkGrafo.fit();
+    setTimeout(function() {
+        networkGrafo.fit();
+    }, 100)
 });
 
 $(document).on("click", function() {

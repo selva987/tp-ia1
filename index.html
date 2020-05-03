@@ -9,6 +9,7 @@
     <script src="js/vis-network.min.js"></script>
     <script src="js/jquery-3.5.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/split.min.js"></script>
 
 
 </head>
@@ -60,14 +61,14 @@
     </nav>
 </header>
 <main role="main" class="container-fluid">
-    <div class="h-100 d-flex p-2 justify-content-between align-items-center flex-grow-1" >
-        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+    <div class="h-100 d-flex p-2 justify-content-between align-items-center flex-grow-1 no-gutters" >
+        <div id="grafoContainer" class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
             <div id="grafo" class="card-body"></div>
         </div>
-        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+        <div id="arbolContainer" class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
             <div id="arbol" class="card-body"></div>
         </div>
-        <div class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
+        <div id="explicacionContainer" class="d-flex p-2 card h-100" style="height: 100%; width: 33%;">
             <div id="explicacion" class="card-body" style="overflow-y: auto"></div>
         </div>
     </div>
@@ -135,6 +136,7 @@
 <script>
 
     var aEstrella;
+    var splitObj;
 
     //Opciones generales de la aplicación
     var opciones = {
@@ -151,7 +153,23 @@
     var menuX;
     var menuY;
 
+    $(document).ready(function() {
+        splitObj = Split(["#grafoContainer","#arbolContainer","#explicacionContainer"], {
+            elementStyle: function (dimension, size, gutterSize) {
+                $(window).trigger('resize'); // Optional
+                return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
+            },
+            gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+            sizes: [100,0,0],
+            minSize: 10,
+            gutterSize: 6,
+            cursor: 'col-resize'
+        });
 
+        $('#modalImportarExportar').on('shown.bs.modal', function() {
+            document.getElementById('strJSON').select();
+        });
+    });
 
     function getLetraDisponible() {
         for(i=65;i<97;i++) {
@@ -270,6 +288,8 @@
             alert('Debe marcar un nodo como fin');
             return;
         }
+
+        splitObj.setSizes([30,50,20]);
 
         aEstrella = new AEstrella(dataGrafo.nodes.get());
         aEstrella.resolver();
@@ -415,7 +435,8 @@
         networkGrafo.setData(dataGrafo);
         $('#arbol').html('');
         $('#explicacion').html('');
-
+        splitObj.setSizes([100,0,0]);
+        networkGrafo.fit();
     }
 
     /**
