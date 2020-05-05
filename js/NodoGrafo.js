@@ -14,6 +14,8 @@ class NodoGrafo extends ElementoGrafico{
         this.vecinos = null;
     }
 
+    //Como los getters y setters en JS estan medio rotos, se simulan setters que también impactan
+    //en otros atributos
     setH(h) {
         if(h < 0) h = 0;
         this.h = h;

@@ -1,3 +1,7 @@
+/**
+ * Colección de grafos de ejemplo
+ */
+
 var ejemploSimple = {
     "nodes": [{
         "id": "A",

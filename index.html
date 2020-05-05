@@ -154,6 +154,10 @@
     var menuY;
 
     $(document).ready(function() {
+        /*
+         Inicialización de Split JS
+         https://stackoverflow.com/a/49606648
+         */
         splitObj = Split(["#grafoContainer","#arbolContainer","#explicacionContainer"], {
             elementStyle: function (dimension, size, gutterSize) {
                 $(window).trigger('resize'); // Optional
@@ -166,11 +170,21 @@
             cursor: 'col-resize'
         });
 
+        if(opciones.calcularH) {
+            $('#switchCalcularH').attr('checked', true);
+        } else {
+            $('#switchCalcularH').removeAttr('checked');
+        }
+
+        //Cuando muestro la ventana de importar y exportar, dejo seleccionado el codigo generado
         $('#modalImportarExportar').on('shown.bs.modal', function() {
             document.getElementById('strJSON').select();
         });
     });
 
+    /**
+     * Escanea los nodos y devuelve la primer letra disponible
+     */
     function getLetraDisponible() {
         for(i=65;i<97;i++) {
             label = String.fromCharCode(i);
@@ -217,6 +231,7 @@
     function marcarInicio() {
         let nodoSeleccionado = networkGrafo.getSelectedNodes();
         let nodos = dataGrafo.nodes.get();
+        //Solo puede haber un nodo inicio asi que se lo quito al actual
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
                 e.setInicio(false);
@@ -235,6 +250,7 @@
     function marcarFin() {
         let nodoSeleccionado = networkGrafo.getSelectedNodes();
         let nodos = dataGrafo.nodes.get();
+        //Quito el estado de nodo fin del nodo fin actual
         if(nodos.length > 0) {
             nodos.forEach(function (e) {
                 e.setFin(false);
@@ -276,6 +292,7 @@
     }
 
     function calcularRuta() {
+        //Controlo que tenga un nodo inicio y un nodo fin
         let nodoInicial = getNodoInicial();
         let nodoFinal = getNodoFinal();
 
@@ -289,8 +306,10 @@
             return;
         }
 
+        //Acomodo la interfaz
         splitObj.setSizes([30,50,20]);
 
+        //Instancio una nueva clase A* y resuelvo
         aEstrella = new AEstrella(dataGrafo.nodes.get());
         aEstrella.resolver();
 
@@ -298,6 +317,7 @@
 
     $(function() {
 
+        //Codigo para el correcto funcionamiento de la interfaz
         $('#botonConfig').on('click', function(event) {
             $('#menu-config').slideToggle();
             event.stopPropagation();
@@ -324,6 +344,7 @@
         }
     }
 
+    //Recorre todos los nodos y recalcula su h' basado en DLR entre el nodo y el objetivo
     function recalcularH() {
         let nodoFinal = getNodoFinal();
         let nodos = dataGrafo.nodes.get();
@@ -336,16 +357,16 @@
                     }
                     e.setH(h);
                 } else e.setH(null);
-
-
             });
             dataGrafo.nodes.update(nodos);
     }
 
+    //Devuelve la distancia euclidiana entre dos nodos
     function calcularDistancia(nodo1, nodo2) {
         return parseInt(Math.sqrt(Math.pow((nodo2.x - nodo1.x), 2) + Math.pow((nodo2.y - nodo1.y), 2)));
     }
 
+    //Recorre todos los caminos calculando la DLR entre los nodos que conecta
     function recalcularPesoCaminos() {
         let caminos = dataGrafo.edges.get();
         let nodos;
@@ -358,6 +379,7 @@
         dataGrafo.edges.update(caminos);
     }
 
+    //Cuando el calculo no es automatico, pide el nuevo valor de h' del nodo y actualiza
     function editarHNodo() {
         let nodo = dataGrafo.nodes.get(networkGrafo.getSelectedNodes());
         if(nodo.length > 0) {
@@ -369,6 +391,8 @@
             dataGrafo.nodes.update(nodo);
         }
     }
+
+    //Cuando el calculo no es automatico, pide el nuevo valor para la ruta y actualiza
     function editarPesoCamino() {
         let camino = dataGrafo.edges.get(networkGrafo.getSelectedEdges());
         if(camino.length > 0) {
@@ -403,15 +427,6 @@
         dataGrafo.edges.update(edges);
     }
 
-    $(document).ready(function() {
-        if(opciones.calcularH) {
-            $('#switchCalcularH').attr('checked', true);
-        } else {
-            $('#switchCalcularH').removeAttr('checked');
-        }
-
-    });
-
     function guardarComoJSON() {
         return JSON.stringify({
             nodes: dataGrafo.nodes.get(),
@@ -440,6 +455,7 @@
     }
 
     /**
+     * Recorre los nodos alterando aleatoriamente su h'
      * Snippet de generación aleatoria sacado de:
      * https://redstapler.co/javascript-random-number-between-range/
      */

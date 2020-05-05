@@ -1,5 +1,5 @@
 /**
- * Este es el nodo que va en el arbol de resolución
+ * Esta es la clase del nodo que va en el arbol de resolución
  */
 
 class NodoArbol extends ElementoGrafico{
@@ -49,6 +49,9 @@ class NodoArbol extends ElementoGrafico{
         return this.hijos;
     }
 
+    /**
+     * Marca el nodo como cerrado y el t en que se cerró, puede marcar a sus hijos
+     */
     cerrar(t, cerrarHijos) {
         //esto es para evitar que al cerrar un nodo padre
         // se sobreescriba el t en que se cerro originalmente
@@ -63,6 +66,9 @@ class NodoArbol extends ElementoGrafico{
         }
     }
 
+    /**
+     * Elige el color del nodo en base a su estado y t
+     */
     marcarColor(t, marcarSolucion) {
         this.hijos.forEach(function (e) {
             e.marcarColor(t, marcarSolucion);
@@ -78,15 +84,29 @@ class NodoArbol extends ElementoGrafico{
         this.color = colorAzul;
     }
 
+    /**
+     * Devuelve la descripción de la funcion f
+     * @returns {string}
+     */
     getStrF() {
         return 'f\'(' + this.nodo.id + ') = ' + this.g + ' + ' + this.nodo.h + ' = ' + this.f;
     }
 
+    /**
+     * Devuelve el camino de la solución, marcando como solución los nodos que lo sean
+     * @returns {string}
+     */
     getStrCamino() {
         this.caminoSolucion = true;
         if(this.padre == null) return [this.nodo.id];
         else return [this.nodo.id].concat(this.padre.getStrCamino()).reverse().join(', ');
     }
+
+    /**
+     * Devuelve todos los nodos del arbol debajo del nodo
+     * @param t
+     * @returns [NodoArbol]
+     */
 
     getNodosArbol(t) {
         // debugger;
@@ -99,6 +119,11 @@ class NodoArbol extends ElementoGrafico{
         return retorno;
     }
 
+    /**
+     * Devuelve todos los caminos del arbol debajo del nodo
+     * @param t
+     * @returns [Camino]
+     */
     getCaminosArbol(t) {
         if(this.t > t) return [];
         let retorno = this.caminosHijos;
