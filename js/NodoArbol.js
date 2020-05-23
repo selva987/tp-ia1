@@ -38,8 +38,8 @@ class NodoArbol extends ElementoGrafico{
             });
         }
         vecinosNodo.forEach(function(e) {
-            //uno de los vecinos puede ser el padre, no lo proceso
-            if(this.padre == null || e.nodo.id != this.padre.nodo.id) {
+            //uno de los vecinos puede ser ancestro, no lo proceso
+            if(this.padre == null || !this.padre.esNodoAncestro(e.nodo)) {
                 let hijo = new NodoArbol(e.nodo, (this.g+e.costo), this, t);
                 this.hijos.push(hijo);
                 this.caminosHijos.push({from:this.id, to:hijo.id, label: '(' + hijo.g + ')'})
@@ -50,20 +50,49 @@ class NodoArbol extends ElementoGrafico{
     }
 
     /**
+     * Recorre hacia arriba el arbol preguntando si es ancestro (corresponde al mismo nodo grafo)
+     * @param nodo NodoGrafo
+     * @returns {boolean}
+     */
+
+    esNodoAncestro(nodo) {
+        //Si mi nodo es el mismo, entonces soy el ancestro
+        if(this.nodo.id == nodo.id) return true;
+
+        if(this.padre != null) {
+            //Si tengo padre le pregunto a el si es ancestro
+            return this.padre.esNodoAncestro(nodo);
+        } else {
+            //Si no tengo padre soy la raiz, y si llegue hasta aca es porque no hubo coincidencia
+            //por lo tanto no es ancestro
+            return false;
+        }
+    }
+
+    /**
      * Marca el nodo como cerrado y el t en que se cerró, puede marcar a sus hijos
+     * Devuelve un array con los nodos que se cerraron
      */
     cerrar(t, cerrarHijos) {
+        let retorno = [];
         //esto es para evitar que al cerrar un nodo padre
         // se sobreescriba el t en que se cerro originalmente
-        if(this.tCerrado != null && this.tCerrado < t) return;
-        // this.label += '('+t+')';
-        this.tCerrado = t;
-        this.color = colorAmarillo;
+        if(this.tCerrado == null) {
+            // this.label += '(' + t + ')';
+            this.tCerrado = t;
+            this.color = colorAmarillo;
+            retorno.push(this);
+        }
         if(cerrarHijos) {
             this.hijos.forEach(function (e) {
-                e.cerrar(t);
+                let hijosCerrados = e.cerrar(t, true);
+                hijosCerrados.forEach(function (e) {
+                    retorno.push(e);
+                });
             }, this);
         }
+
+        return retorno;
     }
 
     /**
