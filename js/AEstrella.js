@@ -23,6 +23,7 @@ class AEstrella {
         this.inicioArbol = new NodoArbol(this.inicio, 0, null, t);
         this.lineaLog(t, 'Agrego el nodo inicial');
         this.lineaLog(t, this.inicioArbol.getStrF());
+        this.lineaLog(t, 'A continuación se empezarán a expandir los nodos en orden alfabético');
         this.abiertos = [this.inicioArbol];
         this.cerrados = []
         let solucion = null;
@@ -77,18 +78,71 @@ class AEstrella {
                             //el mejor, si son iguales dejo ambos
                             if(a.f > n.f) {
                                 this.lineaLog(t, 'Cierro el nodo ' + a.nodo.id + ' con f\' = ' + a.f)
-                                a.cerrar(t, true);
+                                a.cerrar(t, false);
                                 this.cerrados.push(a);
                                 return false;
-                            } else if(a.f != n.f) {
-                                this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f)
-                                n.cerrar(t, true);
+                            } else if(a.f < n.f) {
+                                this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f);
+                                n.cerrar(t, false);
                                 this.cerrados.push(n);
                                 mantenerNuevo = false;
+                            } else {
+                                //Si son iguales desempato por cantidad de nodos expandidos
+                                //el nodo que esté mas profundo es el que potencialmente tiene menos
+                                //nodos que se deberán reexpandir
+
+                                if(n.id.length <= a.id.length) {
+                                    //No necesito calcular la profundidad ni guardarla en otra variable, el id
+                                    //de cada NodoArbol es una concatenacion del id de su NodoGrafo más el de sus ancestros
+                                    //En caso de empate se prioriza el nodo anterior
+                                    this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f
+                                        + ' (desempate por mayor profundidad en el arbol y mayor antiguedad del nodo)');
+                                    n.cerrar(t, false);
+                                    this.cerrados.push(n);
+                                    mantenerNuevo = false;
+                                } else {
+                                    this.lineaLog(t, 'Cierro el nodo ' + a.nodo.id + ' con f\' = ' + a.f
+                                        + ' (desempate por mayor profundidad en el arbol y mayor antiguedad del nodo)');
+                                    a.cerrar(t, false);
+                                    this.cerrados.push(a);
+                                    return false;
+                                }
                             }
                         }
                         return true;
                     }, this);
+
+                    if(mantenerNuevo) {
+                        //Ahora busco entre mis cerrados si existe alguna rama que pueda cerrar
+                        this.cerrados.forEach(function (c) {
+                            if(c.nodo.id == n.nodo.id) {
+                                if(c.f > n.f) {
+                                    //Si encuentro un nodo anterior, cierro sus hijos
+                                    let nodosRamaCerrada = c.cerrar(t, true);
+                                    if (nodosRamaCerrada.length > 0) {
+                                        //Si cerre hijos, entonces los muestro en el log y los quito de abiertos
+                                        let strCierre = 'Se cierran los siguientes nodos que corresponden a una rama que ya no es la mejor: ';
+                                        nodosRamaCerrada.forEach(function (rc) {
+                                            this.abiertos.splice(this.abiertos.indexOf(rc), 1);
+                                            strCierre += rc.nodo.id + '(' + rc.f + '), ';
+                                        }, this);
+                                        this.lineaLog(t, strCierre.slice(0, -2));
+                                    }
+                                } else if(c.f < n.f) {
+                                    mantenerNuevo = false;
+                                    this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f)
+                                    n.cerrar(t, false);
+                                    this.cerrados.push(n);
+                                } else {
+                                    mantenerNuevo = false;
+                                    this.lineaLog(t, 'Cierro el nuevo nodo ' + n.nodo.id + ' con f\' = ' + n.f
+                                        + '(se prioriza al nodo anterior porque ya fue expandido)');
+                                    n.cerrar(t, false);
+                                    this.cerrados.push(n);
+                                }
+                            }
+                        }, this);
+                    }
                     return mantenerNuevo;
                 }, this);
 
