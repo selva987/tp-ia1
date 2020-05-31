@@ -45,8 +45,25 @@ class AEstrella {
                     if(solucion == null || e.f < solucion.f) solucion = e;
                 }
 
-                //Si es mejor que el mejor que tengo hasta ahora, lo guardo
-                if(minimo == null || e.f < minimo.f) minimo = e;
+                if(minimo == null) {
+                    //Si no tengo un minimo, guardo este nodo
+                    minimo = e;
+                } else if(e.f < minimo.f) {
+                    //Si es mejor que el mejor que tengo hasta ahora, lo guardo
+                    minimo = e;
+                } else if(e.f == minimo.f) {
+                    //Si tienen igual f, primero priorizo al que no es solucion
+                    //ya que por el que no es solucion puedo llegar a tener un mejor camino
+                    debugger;
+                    if(minimo.nodo.fin && !e.nodo.fin) {
+                        minimo = e;
+                    } else if(!minimo.nodo.fin && !e.nodo.fin) {
+                        //Si ninguno de los dos es solucion, dejo como minimo al que tenga la menor letra
+                        if(e.nodo.id < minimo.nodo.id) {
+                            minimo = e;
+                        }
+                    }
+                }
             }, this);
             //Termine de recorrer los abiertos
 
@@ -115,6 +132,9 @@ class AEstrella {
                     if(mantenerNuevo) {
                         //Ahora busco entre mis cerrados si existe alguna rama que pueda cerrar
                         this.cerrados.forEach(function (c) {
+                            //No quiero analizar los que recien cerre, eso me va a traer problemas
+                            if(c.tCerrado == t) return;
+                            
                             if(c.nodo.id == n.nodo.id) {
                                 if(c.f > n.f) {
                                     //Si encuentro un nodo anterior, cierro sus hijos
